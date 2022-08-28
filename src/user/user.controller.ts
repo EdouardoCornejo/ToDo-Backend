@@ -9,12 +9,14 @@ import {
   Res,
   HttpStatus,
   Logger,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { createUserDto } from './dto/create-user.dto';
 import { Response } from 'express';
 import { LoginAuthDto } from './dto/login-auth.dto';
+import { JwtAuthGuard } from './jwt/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -23,7 +25,7 @@ export class UserController {
 
   @Post('register')
   async registerUser(
-    @Body() createUserDto: CreateUserDto,
+    @Body() createUserDto: createUserDto,
     @Res() res: Response,
   ) {
     try {
@@ -44,24 +46,11 @@ export class UserController {
   }
 
   @Post('login')
-  async login(@Body() loginUserDto: LoginAuthDto, @Res() res: Response) {
-    try {
-      const user = await this.userService.login(loginUserDto);
-      res.status(HttpStatus.OK).json(user);
-    } catch (error) {
-      this.logger.error(error.code);
-      if (error.code === 'P2002') {
-        res.status(HttpStatus.BAD_REQUEST).json({
-          error: 'User was already created',
-        });
-      } else {
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-          error: 'Contact Server Admin',
-        });
-      }
-    }
+  login(@Body() loginUserDto: LoginAuthDto) {
+    return this.userService.login(loginUserDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(@Res() res: Response) {
     try {
@@ -88,6 +77,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -111,6 +101,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string, @Res() res: Response) {
     try {
