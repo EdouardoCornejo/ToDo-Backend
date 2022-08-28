@@ -10,13 +10,15 @@ import {
   Req,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { TodoService } from './todo.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Response } from 'express';
+import { JwtAuthGuard } from 'src/user/jwt/jwt-auth.guard';
 import Request from '../types/types';
-
+@UseGuards(JwtAuthGuard)
 @Controller('todo')
 export class TodoController {
   private logger = new Logger('TodoController');
