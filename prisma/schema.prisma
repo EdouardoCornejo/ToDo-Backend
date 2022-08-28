@@ -15,4 +15,14 @@ model User {
   email     String     @unique
   name      String?
   password  String
+  Todo      Todo[]
+}
+
+model Todo{
+  id        String @id @default(uuid())
+  title     String
+  date      String
+  completed Boolean @default(false)
+  userId    String
+  User      User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
