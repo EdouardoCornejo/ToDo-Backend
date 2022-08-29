@@ -6,6 +6,8 @@ async function bootstrap() {
   const logger = new Logger('NestApplication');
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(4000);

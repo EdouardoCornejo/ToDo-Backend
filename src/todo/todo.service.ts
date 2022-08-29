@@ -45,11 +45,11 @@ export class TodoService {
     });
   }
 
-  async remove(id: string, userId: string): Promise<Todo> {
+  async remove(id: string, userId: string) {
     const todo = await this.prisma.todo.findUnique({ where: { id } });
     if (todo.userId !== userId)
       throw new UnauthorizedException(
-        'You are not authorized to delete this task',
+        'You are not authorized to delete this Todo',
       );
     return this.prisma.todo.delete({
       where: {
@@ -58,6 +58,7 @@ export class TodoService {
     });
   }
 
+  /* Deleting all the completed tasks of a user. */
   async clearCompleted(userId: string) {
     const todo = await this.prisma.todo.deleteMany({
       where: { userId, completed: true },

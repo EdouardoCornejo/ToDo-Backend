@@ -41,7 +41,6 @@ export class TodoController {
       });
       res.status(HttpStatus.CREATED).json(todo);
     } catch (error) {
-      this.logger.error(error);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         error: 'Contact server admin',
       });
@@ -93,10 +92,9 @@ export class TodoController {
       );
       res.status(HttpStatus.ACCEPTED).json(todo);
     } catch (error) {
-      this.logger.error(error.code);
       if (error.code === 'P2025') {
-        res.status(HttpStatus.BAD_REQUEST).json({
-          error: 'The task does not',
+        res.status(HttpStatus.ACCEPTED).json({
+          error: 'The task does not exist',
         });
       } else {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
@@ -117,8 +115,9 @@ export class TodoController {
       res.status(HttpStatus.ACCEPTED).json(todo);
     } catch (error) {
       this.logger.error(error.code);
+      console.log(error);
       if (error.code === 'P2025') {
-        res.status(HttpStatus.BAD_REQUEST).json({
+        res.status(HttpStatus.ACCEPTED).json({
           error: 'The task does not exist',
         });
       } else {
@@ -136,14 +135,14 @@ export class TodoController {
       res.status(HttpStatus.ACCEPTED).json(todo);
     } catch (error) {
       this.logger.error(error.code);
+      console.log(error);
       if (error.code === 'P2025') {
-        res.status(HttpStatus.BAD_REQUEST).json({
+        res.status(HttpStatus.NOT_FOUND).json({
           error: 'The task does not exist',
         });
-      }
-      if (error === '401') {
-        res.status(HttpStatus.NOT_FOUND).json({
-          error: `You don't have completed task to delete`,
+      } else if (error === '401') {
+        res.status(HttpStatus.NO_CONTENT).json({
+          error: `You don't have completed tasks to delete`,
         });
       } else {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
