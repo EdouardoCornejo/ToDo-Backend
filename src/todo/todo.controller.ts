@@ -18,12 +18,28 @@ import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Response } from 'express';
 import { JwtAuthGuard } from 'src/user/jwt/jwt-auth.guard';
 import Request from '../types/types';
+import {
+  ApiAcceptedResponse,
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+
+@ApiBearerAuth()
+@ApiUnauthorizedResponse({ description: 'Login token required' })
+@ApiInternalServerErrorResponse({ description: 'Contact server admin' })
 @UseGuards(JwtAuthGuard)
 @Controller('todo')
 export class TodoController {
   private logger = new Logger('TodoController');
   constructor(private readonly todoService: TodoService) {}
 
+  @ApiCreatedResponse({ description: 'New task created' })
+  @ApiBadRequestResponse({ description: 'Task not created' })
   @Post()
   async create(
     @Body() dto: CreateTodoDto,
@@ -47,6 +63,8 @@ export class TodoController {
     }
   }
 
+  @ApiAcceptedResponse({ description: 'Obtained ToDo records' })
+  @ApiNotFoundResponse({ description: 'ToDo records not obtained' })
   @Get()
   async findAll(@Res() res: Response, @Req() req: Request) {
     try {
@@ -60,6 +78,8 @@ export class TodoController {
     }
   }
 
+  @ApiAcceptedResponse({ description: 'Obtained ToDo record' })
+  @ApiNotFoundResponse({ description: 'ToDo record not obtained' })
   @Get(':id')
   async findOne(
     @Param('id') id: string,
@@ -77,6 +97,9 @@ export class TodoController {
     }
   }
 
+  @ApiAcceptedResponse({ description: 'Updated ToDo record' })
+  @ApiBadRequestResponse({ description: 'ToDo could not update' })
+  @ApiNotFoundResponse({ description: 'ToDo not found' })
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -93,7 +116,7 @@ export class TodoController {
       res.status(HttpStatus.ACCEPTED).json(todo);
     } catch (error) {
       if (error.code === 'P2025') {
-        res.status(HttpStatus.ACCEPTED).json({
+        res.status(HttpStatus.NOT_FOUND).json({
           error: 'The task does not exist',
         });
       } else {
@@ -104,6 +127,9 @@ export class TodoController {
     }
   }
 
+  @ApiAcceptedResponse({ description: 'ToDo deleted' })
+  @ApiBadRequestResponse({ description: 'ToDo could not deleted' })
+  @ApiNotFoundResponse({ description: 'ToDo not found' })
   @Delete(':id')
   async remove(
     @Param('id') id: string,
@@ -117,7 +143,7 @@ export class TodoController {
       this.logger.error(error.code);
       console.log(error);
       if (error.code === 'P2025') {
-        res.status(HttpStatus.ACCEPTED).json({
+        res.status(HttpStatus.NOT_FOUND).json({
           error: 'The task does not exist',
         });
       } else {
@@ -128,6 +154,10 @@ export class TodoController {
     }
   }
 
+  @ApiAcceptedResponse({ description: `ToDo's deleted` })
+  @ApiBadRequestResponse({ description: `ToDo's could not deleted` })
+  @ApiNotFoundResponse({ description: `ToDo's  not found` })
+  @ApiNoContentResponse({ description: `Uncompleted tasks not found` })
   @Delete()
   async clearCompleted(@Res() res: Response, @Req() req: Request) {
     try {

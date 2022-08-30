@@ -13,7 +13,7 @@ async function bootstrap() {
     .addBearerAuth()
     .setTitle('ToDo App')
     .setDescription(
-      ' This application allows you to create users, log in and create tasks ',
+      'This app allows you to: create accounts, login to accounts, create tasks, set the due date for these tasks and mark them as completed',
     )
     .setVersion('1.0')
     .addTag(`ToDo's`)
