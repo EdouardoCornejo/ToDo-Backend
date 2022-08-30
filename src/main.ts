@@ -25,5 +25,6 @@ async function bootstrap() {
 
   await app.listen(4000);
   logger.log('Nestapp run in port  4000');
+  logger.log('Swagger run in port  4000/Documentation');
 }
 bootstrap();
