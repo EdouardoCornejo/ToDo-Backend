@@ -3,8 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsString } from 'class-validator';
 import { CreateTodoDto } from './create-todo.dto';
 
-/* It extends the CreateTodoDto class and adds the @IsString() and @IsBoolean() decorators to the title
-and completed properties */
+/* It extends the CreateTodoDto class and adds the @ApiProperty decorator to each property */
 export class UpdateTodoDto extends PartialType(CreateTodoDto) {
   @ApiProperty({
     description: 'Update the title of a task',

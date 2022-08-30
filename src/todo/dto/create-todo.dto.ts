@@ -1,5 +1,7 @@
 import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+
+/* It's a DTO class that defines the properties of a todo item */
 export class CreateTodoDto {
   @ApiProperty({
     description: 'Enter the title of a task',

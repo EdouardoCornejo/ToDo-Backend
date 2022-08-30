@@ -29,17 +29,21 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
+/* This is a swagger decorator that is used to add a description to the swagger documentation. */
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Login token required' })
 @ApiInternalServerErrorResponse({ description: 'Contact server admin' })
 @UseGuards(JwtAuthGuard)
 @Controller('todo')
 export class TodoController {
+  /* This is a logger that is used to log errors. */
   private logger = new Logger('TodoController');
   constructor(private readonly todoService: TodoService) {}
 
+  /* This is a swagger decorator that is used to add a description to the swagger documentation. */
   @ApiCreatedResponse({ description: 'New task created' })
   @ApiBadRequestResponse({ description: 'Task not created' })
+  /* This is a method that is used to create a new task. */
   @Post()
   async create(
     @Body() dto: CreateTodoDto,
@@ -63,8 +67,10 @@ export class TodoController {
     }
   }
 
+  /* This is a swagger decorator that is used to add a description to the swagger documentation. */
   @ApiAcceptedResponse({ description: 'Obtained ToDo records' })
   @ApiNotFoundResponse({ description: 'ToDo records not obtained' })
+  /* This is a method that is used to get all the tasks. */
   @Get()
   async findAll(@Res() res: Response, @Req() req: Request) {
     try {
@@ -78,8 +84,10 @@ export class TodoController {
     }
   }
 
+  /* This is a swagger decorator that is used to add a description to the swagger documentation. */
   @ApiAcceptedResponse({ description: 'Obtained ToDo record' })
   @ApiNotFoundResponse({ description: 'ToDo record not obtained' })
+  /* This is a method that is used to get a single task. */
   @Get(':id')
   async findOne(
     @Param('id') id: string,
@@ -97,9 +105,11 @@ export class TodoController {
     }
   }
 
+  /* This is a swagger decorator that is used to add a description to the swagger documentation. */
   @ApiAcceptedResponse({ description: 'Updated ToDo record' })
   @ApiBadRequestResponse({ description: 'ToDo could not update' })
   @ApiNotFoundResponse({ description: 'ToDo not found' })
+  /* This is a method that is used to update a task. */
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -127,9 +137,11 @@ export class TodoController {
     }
   }
 
+  /* This is a swagger decorator that is used to add a description to the swagger documentation. */
   @ApiAcceptedResponse({ description: 'ToDo deleted' })
   @ApiBadRequestResponse({ description: 'ToDo could not deleted' })
   @ApiNotFoundResponse({ description: 'ToDo not found' })
+  /* This is a method that is used to delete a task. */
   @Delete(':id')
   async remove(
     @Param('id') id: string,
@@ -153,11 +165,13 @@ export class TodoController {
       }
     }
   }
+  /* This is a swagger decorator that is used to add a description to the swagger documentation. */
 
   @ApiAcceptedResponse({ description: `ToDo's deleted` })
   @ApiBadRequestResponse({ description: `ToDo's could not deleted` })
   @ApiNotFoundResponse({ description: `ToDo's  not found` })
   @ApiNoContentResponse({ description: `Uncompleted tasks not found` })
+  /* This is a method that is used to delete all the completed tasks. */
   @Delete()
   async clearCompleted(@Res() res: Response, @Req() req: Request) {
     try {

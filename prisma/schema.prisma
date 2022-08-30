@@ -1,15 +1,17 @@
 // This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+//Telling prisma to generate a client for us.
 generator client {
   provider = "prisma-client-js"
 }
 
+//Telling prisma to use postgresql as the database and to use the url from the env variable.
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+// Creating a model called User with the following fields:
 model User {
   id        String     @id @default(uuid())
   email     String     @unique
@@ -18,6 +20,7 @@ model User {
   Todo      Todo[]
 }
 
+//This is creating a model called Todo with the following fields:
 model Todo{
   id        String @id @default(uuid())
   title     String
